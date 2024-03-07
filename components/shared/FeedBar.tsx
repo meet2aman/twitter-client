@@ -24,6 +24,18 @@ const FeedBar = () => {
         <FeedCard />
         <FeedCard />
         <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />
+        <FeedCard />  
+        <FeedCard />
       </div>
     </div>
   );

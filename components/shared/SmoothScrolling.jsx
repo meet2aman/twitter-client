@@ -6,7 +6,7 @@ function SmoothScrolling({ children }) {
     // called every scroll
   });
   return (
-    <ReactLenis root options={{ lerp: 0.1, duration: 10, smoothTouch: true }}>
+    <ReactLenis root options={{ lerp: 0.1, duration: 1.4, smoothTouch: true }}>
       {children}
     </ReactLenis>
   );
