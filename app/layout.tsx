@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import SmoothScrolling from "@/components/shared/SmoothScrolling";
-import LeftBar from "@/components/shared/LeftBar";
 const inter = Inter({ subsets: ["latin"] });
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "react-hot-toast";
+import { ReactQueryProvider } from "@/lib/ReactQueryProvider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export const metadata: Metadata = {
   title: "Twitter",
@@ -21,8 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <GoogleOAuthProvider clientId="761064026406-7fi8mnunns0iot2u27erqugt501r60s6.apps.googleusercontent.com">
-          <Toaster />
-          <SmoothScrolling>{children}</SmoothScrolling>
+          <ReactQueryProvider>
+            <Toaster />
+            <SmoothScrolling>{children}</SmoothScrolling>
+            <ReactQueryDevtools />
+          </ReactQueryProvider>
         </GoogleOAuthProvider>
       </body>
     </html>

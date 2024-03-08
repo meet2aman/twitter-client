@@ -9,6 +9,7 @@ import { CiCircleMore } from "react-icons/ci";
 import { CiUser } from "react-icons/ci";
 import { PiDotsThreeBold } from "react-icons/pi";
 import Image from "next/image";
+import { useCurrentUser } from "@/hooks/user";
 interface twitterSideButton {
   title: string;
   icon: React.ReactNode;
@@ -46,6 +47,7 @@ const sideBarMenu: twitterSideButton[] = [
 ];
 
 const LeftBar = () => {
+  const { user } = useCurrentUser();
   return (
     <div className="sticky top-0">
       <div className="text-[1.6rem] flex items-center gap-4 rounded-full w-fit h-fit p-3 cursor-pointer hover:bg-gray-500/50  transition-all">
@@ -72,32 +74,36 @@ const LeftBar = () => {
             </button>
           </div>
         </div>
-        <div>
-          <button className="w-full flex justify-between items-center hover:bg-gray-500/50 transition-all rounded-full px-3 py-2">
-            <div className="flex justify-between items-center gap-2">
+        {user && (
+          <div>
+            <button className="w-full flex justify-between items-center hover:bg-gray-500/50 transition-all rounded-full px-3 py-2">
+              <div className="flex justify-between items-center gap-2">
+                <div>
+                  {user?.profileImage && (
+                    <Image
+                      height={80}
+                      width={80}
+                      className="object-cover rounded-full"
+                      alt="profile"
+                      src={user.profileImage}
+                    />
+                  )}
+                </div>
+                <div className="text-[15px] text-start ">
+                  <h2 className="capitalize w-[8rem]  tracking-wide font-[700] truncate ">
+                    {user?.firstName} {user?.lastName}
+                  </h2>
+                  <p className="text-slate-500 truncate font-[400] w-[8rem] ">
+                    {user?.email}
+                  </p>
+                </div>
+              </div>
               <div>
-                <Image
-                  height={80}
-                  width={80}
-                  className="object-cover rounded-full"
-                  alt="profile"
-                  src={"https://avatars.githubusercontent.com/u/94225157?v=4"}
-                />
+                <PiDotsThreeBold />
               </div>
-              <div className="text-[15px] text-start ">
-                <h2 className="capitalize w-[8rem]  tracking-wide font-[700] truncate ">
-                  Aman Kushwaha
-                </h2>
-                <p className="text-slate-500 truncate font-[400] w-[8rem] ">
-                  @amankushwaha
-                </p>
-              </div>
-            </div>
-            <div>
-              <PiDotsThreeBold />
-            </div>
-          </button>
-        </div>
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

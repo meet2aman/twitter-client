@@ -1,3 +1,4 @@
+"use client";
 import LeftBar from "@/components/shared/LeftBar";
 import RightBar from "@/components/shared/RightBar";
 import FeedBar from "@/components/shared/FeedBar";
