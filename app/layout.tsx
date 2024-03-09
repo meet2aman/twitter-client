@@ -7,6 +7,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import { Toaster } from "react-hot-toast";
 import { ReactQueryProvider } from "@/lib/ReactQueryProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { LoaderProvider } from "@/context/ContextProvider";
 
 export const metadata: Metadata = {
   title: "Twitter",
@@ -23,9 +24,11 @@ export default function RootLayout({
       <body className={inter.className}>
         <GoogleOAuthProvider clientId="761064026406-7fi8mnunns0iot2u27erqugt501r60s6.apps.googleusercontent.com">
           <ReactQueryProvider>
-            <Toaster />
-            <SmoothScrolling>{children}</SmoothScrolling>
-            <ReactQueryDevtools />
+            <LoaderProvider>
+              <Toaster />
+              <SmoothScrolling>{children}</SmoothScrolling>
+              <ReactQueryDevtools />
+            </LoaderProvider>
           </ReactQueryProvider>
         </GoogleOAuthProvider>
       </body>

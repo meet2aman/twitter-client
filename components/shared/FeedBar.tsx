@@ -2,6 +2,9 @@ import React from "react";
 import FeedCard from "../sub/FeedCard";
 import { FaArrowLeft } from "react-icons/fa6";
 import { useCurrentUser } from "@/hooks/user";
+import TweetPostCard from "../sub/TweetPostCard";
+import { useGetAllTweets } from "@/hooks/tweet";
+import { Tweet } from "@/gql/graphql";
 
 interface USER {
   firstName?: string;
@@ -14,7 +17,7 @@ interface USER {
 
 const FeedBar = () => {
   const { user } = useCurrentUser();
-
+  const { tweets = [] } = useGetAllTweets();
   return (
     <div className="">
       <div className="sticky top-0">
@@ -33,6 +36,11 @@ const FeedBar = () => {
       </div>
       {user && (
         <div className="pt-14">
+          <TweetPostCard />
+          {tweets?.map((tweet: any) =>
+            tweet ? <FeedCard key={tweet?.id} data={tweet as Tweet} /> : null
+          )}
+          {/* <FeedCard />
           <FeedCard />
           <FeedCard />
           <FeedCard />
@@ -49,8 +57,7 @@ const FeedBar = () => {
           <FeedCard />
           <FeedCard />
           <FeedCard />
-          <FeedCard />
-          <FeedCard />
+          <FeedCard /> */}
         </div>
       )}
     </div>

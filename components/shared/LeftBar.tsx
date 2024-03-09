@@ -49,8 +49,8 @@ const sideBarMenu: twitterSideButton[] = [
 const LeftBar = () => {
   const { user } = useCurrentUser();
   return (
-    <div className="sticky top-0">
-      <div className="text-[1.6rem] flex items-center gap-4 rounded-full w-fit h-fit p-3 cursor-pointer hover:bg-gray-500/50  transition-all">
+    <div className="sticky top-0 h-screen">
+      <div className="text-[2rem] flex items-center gap-4 rounded-full w-fit h-fit p-3 cursor-pointer hover:bg-gray-500/50  transition-all">
         <FaXTwitter className="cursor-pointer" />
       </div>
       <div className="flex flex-col gap-[16rem]">
@@ -81,8 +81,8 @@ const LeftBar = () => {
                 <div>
                   {user?.profileImage && (
                     <Image
-                      height={80}
-                      width={80}
+                      height={50}
+                      width={50}
                       className="object-cover rounded-full"
                       alt="profile"
                       src={user.profileImage}

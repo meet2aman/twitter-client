@@ -9,13 +9,16 @@ import toast from "react-hot-toast";
 import { graphQLClient } from "@/clients/api";
 import { verifyUserGoogleTokenQuery } from "@/graphql/query/user";
 import { useCurrentUser } from "@/hooks/user";
-import { QueryClient, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
+import { useLoader } from "@/context/ContextProvider";
 
 const RightBar = () => {
+  const { setLoading }: any = useLoader();
   const { user } = useCurrentUser();
   const queryClient = useQueryClient();
   const handleLoginWithGoogle = useCallback(
     async (cred: CredentialResponse) => {
+      setLoading(true);
       const googleToken = cred.credential;
 
       if (!googleToken) {
@@ -37,6 +40,7 @@ const RightBar = () => {
 
       //@ts-ignore
       await queryClient.invalidateQueries(["curent-user"]);
+      setLoading(false);
     },
     [queryClient]
   );
@@ -45,6 +49,7 @@ const RightBar = () => {
       <div className="fixed top-0 w-[20.4%] z-50">
         <SearchBar />
       </div>
+
       <div className="">
         <div className="sticky top-20 mt-20 z-40">
           {
