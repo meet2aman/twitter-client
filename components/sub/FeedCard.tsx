@@ -1,7 +1,8 @@
+"use client";
 import Image from "next/image";
 import React from "react";
 import { PiDotsThree } from "react-icons/pi";
-import { CiHeart } from "react-icons/ci";
+import { IoMdHeartEmpty } from "react-icons/io";
 import { AiOutlineMessage } from "react-icons/ai";
 import { AiOutlineRetweet } from "react-icons/ai";
 import { MdOutlineFileUpload } from "react-icons/md";
@@ -14,9 +15,18 @@ interface FeedCardProps {
 }
 
 const FeedCard: React.FC<FeedCardProps> = (props) => {
+
   const { data } = props;
   const { user } = useCurrentUser();
-
+  const handleLikeClick = () => {
+    // if (tweet.isLiked) {
+    //   // Unlike if already liked
+    //   unlikeMutation.mutate({ tweetId: tweet.id });
+    // } else {
+    //   // Like if not liked
+    //   likeMutation.mutate({ tweetId: tweet.id });
+    // }
+  };
   return (
     <div>
       <div className="grid grid-cols-11 border-b-[1px] border-[#2f3336] p-4 gap-2 cursor-pointer hover:bg-slate-900/70">
@@ -83,9 +93,12 @@ const FeedCard: React.FC<FeedCardProps> = (props) => {
             <div className="hover:bg-slate-600 p-2 rounded-full">
               <AiOutlineMessage />
             </div>
-            <div className="hover:bg-slate-600 p-2 rounded-full ">
-              <CiHeart className="hover:fill-rose-500" />
-            </div>
+            <button
+              onClick={handleLikeClick}
+              className="hover:bg-slate-600 p-2 rounded-full "
+            >
+              <IoMdHeartEmpty className="hover:fill-rose-500" />
+            </button>
             <div className="hover:bg-slate-600 p-2 rounded-full">
               <AiOutlineRetweet />
             </div>

@@ -10,12 +10,12 @@ export const useCreateTweet = () => {
   const mutation = useMutation({
     mutationFn: (payload: CreateTweetInput) =>
       graphQLClient.request(createTweetMutation, { payload }),
-    onMutate: (payload) =>
-      toast.loading(`Creating tweet`, { id: payload.content }),
+    onMutate: (payload) => toast.loading(`Creating tweet`, { id: "1" }),
     onSuccess: async (payload) => {
+    //@ts-ignore
       await queryClient.invalidateQueries(["all-tweets"]);
       toast.success(`Created tweet successfully`, {
-        id: payload.createTweet.id,
+        id: "1",
       });
     },
   });

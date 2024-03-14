@@ -46,11 +46,11 @@ const RightBar = () => {
   );
   return (
     <>
-      <div className="fixed top-0 w-[20.4%] z-50">
-        <SearchBar />
-      </div>
-
       <div className="">
+        <div className="fixed top-0 z-50">
+          <SearchBar />
+        </div>
+
         <div className="sticky top-20 mt-20 z-40">
           {
             <>

@@ -8,7 +8,8 @@ import { Toaster } from "react-hot-toast";
 import { ReactQueryProvider } from "@/lib/ReactQueryProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { LoaderProvider } from "@/context/ContextProvider";
-
+import LeftBar from "@/components/shared/LeftBar";
+import MobileNavigation from "../components/shared/MobileNavigation";
 export const metadata: Metadata = {
   title: "Twitter",
   description: "Twitter in my Way",
@@ -26,7 +27,13 @@ export default function RootLayout({
           <ReactQueryProvider>
             <LoaderProvider>
               <Toaster />
-              <SmoothScrolling>{children}</SmoothScrolling>
+              <SmoothScrolling>
+                <main className="2xl:px-[15.5rem] xl:px-[9rem] lg:px-[7rem] md:px-[3rem] md:grid grid-cols-9">
+                  <LeftBar />
+                  {children}
+                  <MobileNavigation />
+                </main>
+              </SmoothScrolling>
               <ReactQueryDevtools />
             </LoaderProvider>
           </ReactQueryProvider>

@@ -5,6 +5,8 @@ const nextConfig = {
       "avatars.githubusercontent.com",
       "lh3.googleusercontent.com",
       "images.unsplash.com",
+      "techo-twitter-dev.s3.ap-south-1.amazonaws.com ",
+      "techo-twitter-dev.s3.ap-south-1.amazonaws.com",
     ],
   },
 };

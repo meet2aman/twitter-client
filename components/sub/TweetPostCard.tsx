@@ -1,5 +1,6 @@
 "use client";
 import { useCurrentUser } from "@/hooks/user";
+import axios from "axios";
 import Image from "next/image";
 import React, { useCallback, useState } from "react";
 import { IoMdGlobe } from "react-icons/io";
@@ -17,6 +18,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useCreateTweet } from "@/hooks/tweet";
+import { graphQLClient } from "@/clients/api";
+import { getSignedURLForTweetQuery } from "@/graphql/mutation/tweet";
+import { headers } from "next/headers";
+import toast from "react-hot-toast";
 
 const Icons = [
   {
@@ -42,34 +47,78 @@ const Icons = [
 ];
 
 const TweetPostCard: React.FC = () => {
-  const [chosenEmoji, setChosenEmoji] = useState(null);
-  const [toggle, setToggle] = useState(false);
   const [content, setContent] = useState("");
+  const [imageURL, setImageURL] = useState("");
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { mutate } = useCreateTweet();
   const { user } = useCurrentUser();
+
+  // ----------- handling input file change ----------------- //
+  const handleInputChangeFile = useCallback((input: HTMLInputElement) => {
+    return async (event: Event) => {
+      event.preventDefault();
+      const file: File | null | undefined = input.files?.item(0);
+      if (!file) return;
+      if (file) {
+        setSelectedImage(file);
+        setImagePreview(URL.createObjectURL(file)); // Create image preview
+      }
+    };
+  }, []);
+
+  // ----------- handling Image selection ----------------- //
+  const handleSelectImage = useCallback(() => {
+    const input = document.createElement("input");
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    const handlerFn = handleInputChangeFile(input);
+    input.addEventListener("change", handlerFn);
+    input.click();
+  }, [handleInputChangeFile]);
+
+ 
+
+  // ----------- handling Creating Tweet ----------------- //
+  const handleCreateTweet = useCallback(async () => {
+    // ----------- handling Image Uploading & uploading Tweet ----------------- //
+    if (selectedImage) {
+      const { getSignedURLForTweet } = await graphQLClient.request(
+        getSignedURLForTweetQuery,
+        {
+          imageName: selectedImage.name,
+          imageType: selectedImage.type,
+        }
+      );
+      if (getSignedURLForTweet) {
+        toast.loading("Uploading...", { id: "2" });
+        await axios.put(getSignedURLForTweet, selectedImage, {
+          headers: {
+            "Content-Type": selectedImage.type,
+          },
+        });
+        toast.success("Uploaded", { id: "2" });
+        const url = new URL(getSignedURLForTweet);
+        const myFilePath = `${url.origin}${url.pathname}`;
+        mutate({ content, tweetImageUrl: myFilePath });
+        setSelectedImage(null);
+        setContent("");
+        setImagePreview("");
+      }
+    }
+  }, [mutate, content, selectedImage, imagePreview]);
+
+  // ----------- handling Icon Click Dynamically ----------------- //
   const handleIconClick = (title: string) => {
     switch (title) {
       case (title = "picture"):
-        const input = document.createElement("input");
-        input.setAttribute("type", "file");
-        input.setAttribute("accept", "image/*");
-        input.click();
-        break;
-      case (title = "emoji"):
+        handleSelectImage();
         break;
       default:
         break;
     }
   };
-  const handleCreateTweet = useCallback(() => {
-    mutate({ content });
-  }, []);
-  const onEmojiClick = (event: any, emojiObject: any) => {
-    setToggle((prev) => !prev);
-    console.log(toggle);
-    setChosenEmoji(emojiObject);
-    console.log(emojiObject.target);
-  };
+
   return (
     <main className="mt-5">
       {user && (
@@ -109,6 +158,15 @@ const TweetPostCard: React.FC = () => {
                   rows={1}
                   placeholder="What's happening?"
                 />
+                {imagePreview && (
+                  <Image
+                    src={imagePreview}
+                    alt="tweet-image"
+                    className="w-full rounded-xl mt-2 object-cover"
+                    width={70}
+                    height={80}
+                  />
+                )}
               </div>
               <div className="py-3 border-b-[1px] border-[#2f3336]">
                 <div className="flex justify-start gap-2 items-center text-sky-500 hover:bg-slate-800/70 w-[200px] px-2 rounded-full transition-all cursor-pointer">
@@ -131,7 +189,7 @@ const TweetPostCard: React.FC = () => {
                 <div>
                   <button
                     onClick={handleCreateTweet}
-                    className="text-center bg-sky-700 transition-all hover:bg-sky-500 text-white font-[500] py-2 px-5 rounded-full"
+                    className="text-center bg-sky-700 transition-all hover:bg-sky-500 text-white font-[500] py-2 px-3 md:px-5 rounded-full"
                   >
                     Tweet
                   </button>
@@ -144,7 +202,6 @@ const TweetPostCard: React.FC = () => {
               Show 70 Tweets
             </span>
           </div>
-          {toggle && <Picker onEmojiClick={onEmojiClick} />}
         </section>
       )}
     </main>
