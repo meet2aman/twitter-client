@@ -20,8 +20,14 @@ import {
 import { useCreateTweet } from "@/hooks/tweet";
 import { graphQLClient } from "@/clients/api";
 import { getSignedURLForTweetQuery } from "@/graphql/mutation/tweet";
-import { headers } from "next/headers";
 import toast from "react-hot-toast";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { CalendarDays } from "lucide-react";
 
 const Icons = [
   {
@@ -77,12 +83,16 @@ const TweetPostCard: React.FC = () => {
     input.click();
   }, [handleInputChangeFile]);
 
- 
-
   // ----------- handling Creating Tweet ----------------- //
   const handleCreateTweet = useCallback(async () => {
-    // ----------- handling Image Uploading & uploading Tweet ----------------- //
-    if (selectedImage) {
+    // ************ handling Image Uploading & uploading Tweet ************* //
+    if (!selectedImage && content.length > 0) {
+      mutate({ content, tweetImageUrl: null });
+      setSelectedImage(null);
+      setContent("");
+      setImagePreview("");
+    }
+    if (selectedImage && content.length > 0) {
       const { getSignedURLForTweet } = await graphQLClient.request(
         getSignedURLForTweetQuery,
         {
@@ -126,13 +136,44 @@ const TweetPostCard: React.FC = () => {
           <div className="grid grid-cols-11 gap-2 px-4">
             {user.profileImage && (
               <div className="col-span-1">
-                <Image
-                  className="rounded-full object-cover"
-                  src={user?.profileImage}
-                  alt="user-profile"
-                  width={50}
-                  height={50}
-                />
+                <HoverCard>
+                  <HoverCardTrigger asChild>
+                    <Image
+                      className="rounded-full object-cover cursor-pointer"
+                      src={user?.profileImage}
+                      alt="user-profile"
+                      width={50}
+                      height={50}
+                    />
+                  </HoverCardTrigger>
+                  <HoverCardContent className="w-80" align="center">
+                    <div className="flex justify-between space-x-4">
+                      <Avatar>
+                        <AvatarImage src={`${user.profileImage}`} />
+                        <AvatarFallback className="uppercase">
+                          {user?.firstName.charAt(0)}
+                          {user?.lastName?.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="space-y-1">
+                        <h4 className="text-sm font-semibold">
+                          {user?.firstName} {user?.lastName}
+                        </h4>
+                        <p className="text-sm">
+                          <span className="text-slate-700">{user?.email}</span>
+                          <br />
+                          Hey What's up dude !
+                        </p>
+                        <div className="flex items-center pt-2">
+                          <CalendarDays className="mr-2 h-4 w-4 opacity-70" />{" "}
+                          <span className="text-xs text-muted-foreground">
+                            Joined December 2021
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </HoverCardContent>
+                </HoverCard>
               </div>
             )}
             <div className="col-span-10">
@@ -189,7 +230,7 @@ const TweetPostCard: React.FC = () => {
                 <div>
                   <button
                     onClick={handleCreateTweet}
-                    className="text-center bg-sky-700 transition-all hover:bg-sky-500 text-white font-[500] py-2 px-3 md:px-5 rounded-full"
+                    className="text-center bg-sky-600 transition-all hover:bg-sky-500 text-white font-[500] py-2 px-3 md:px-5 rounded-full"
                   >
                     Tweet
                   </button>

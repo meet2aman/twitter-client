@@ -8,14 +8,20 @@ import { AiOutlineRetweet } from "react-icons/ai";
 import { MdOutlineFileUpload } from "react-icons/md";
 import { useCurrentUser } from "@/hooks/user";
 import { Tweet } from "@/gql/graphql";
-import { Span } from "next/dist/trace";
-
+import { CiBookmark } from "react-icons/ci";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { CalendarDays } from "lucide-react";
+import Link from "next/link";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 interface FeedCardProps {
   data: Tweet;
 }
 
 const FeedCard: React.FC<FeedCardProps> = (props) => {
-
   const { data } = props;
   const { user } = useCurrentUser();
   const handleLikeClick = () => {
@@ -33,13 +39,48 @@ const FeedCard: React.FC<FeedCardProps> = (props) => {
         {/* avatar */}
         <div className="col-span-1">
           {data?.author?.profileImage ? (
-            <Image
-              height={50}
-              width={50}
-              className="object-cover rounded-full"
-              alt="profile"
-              src={data?.author?.profileImage}
-            />
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <Image
+                  height={50}
+                  width={50}
+                  className="object-cover rounded-full cursor-pointer"
+                  alt="profile"
+                  src={data?.author?.profileImage}
+                />
+              </HoverCardTrigger>
+              <HoverCardContent className="w-80" side="top">
+                <div className="flex justify-between">
+                  <Avatar className="w-[14%]">
+                    <AvatarImage src={`${data?.author?.profileImage}`} />
+                    <AvatarFallback className="uppercase">
+                      {data?.author?.firstName.charAt(0)}
+                      {data?.author?.lastName?.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="space-y-1 w-[80%]">
+                    <Link href={`/${data.author.id}`}>
+                      <h4 className="text-sm font-semibold">
+                        {data?.author?.firstName} {data?.author?.lastName}
+                      </h4>
+                    </Link>
+                    <p className="text-sm">
+                      <span className="text-slate-700">
+                        {data?.author?.email}
+                      </span>
+                      <br />
+                      Hey What's up dude !
+                    </p>
+                    <div className="flex items-center pt-2">
+                      <CalendarDays className="mr-2 h-4 w-4 opacity-70" />{" "}
+                      <span className="text-xs text-muted-foreground">
+                        Joined December 2021
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
           ) : (
             <>
               <div className="border px-1 py-2 border-white rounded-full text-white">
@@ -56,9 +97,11 @@ const FeedCard: React.FC<FeedCardProps> = (props) => {
           <div className="flex justify-between items-center max-lg:mb-4 mb-3">
             <div className="flex justify-center items-start gap-1">
               <div className="lg:flex items-center gap-1">
-                <h5 className="text-[15px] font-[700]">
-                  {data?.author?.firstName} {data?.author?.lastName}
-                </h5>
+                <Link href={`/${data.author?.id}`}>
+                  <h5 className="text-[15px] font-[700] hover:underline transition-all decoration-sky-500">
+                    {data?.author?.firstName} {data?.author?.lastName}
+                  </h5>
+                </Link>
                 <p className="text-[15px] truncate w-[130px] font-[400] text-gray-500">
                   {data?.author?.email}
                 </p>
@@ -74,7 +117,7 @@ const FeedCard: React.FC<FeedCardProps> = (props) => {
           </div>
           {/* content */}
           <div className="-mt-3">
-            <p className="text-[15px] font-[400] tracking-wide">
+            <p className="text-[15px] font-[400] tracking-wide pr-3 overflow-hidden">
               {data?.content}
             </p>
 
@@ -90,20 +133,23 @@ const FeedCard: React.FC<FeedCardProps> = (props) => {
           </div>
           {/* buttons */}
           <div className="flex justify-between mt-2 text-[20px] pr-8">
-            <div className="hover:bg-slate-600 p-2 rounded-full">
-              <AiOutlineMessage />
+            <div className="hover:bg-slate-600 p-2 rounded-full group">
+              <AiOutlineMessage className="group-hover:fill-blue-300 transition-all" />
             </div>
             <button
               onClick={handleLikeClick}
-              className="hover:bg-slate-600 p-2 rounded-full "
+              className="hover:bg-slate-600 p-2 rounded-full group"
             >
-              <IoMdHeartEmpty className="hover:fill-rose-500" />
+              <IoMdHeartEmpty className="group-hover:fill-rose-500 transition-all" />
             </button>
-            <div className="hover:bg-slate-600 p-2 rounded-full">
-              <AiOutlineRetweet />
+            <div className="hover:bg-slate-600 p-2 rounded-full group">
+              <AiOutlineRetweet className="group-hover:fill-sky-500 transition-all" />
             </div>
-            <div className="hover:bg-slate-600 p-2 rounded-full">
-              <MdOutlineFileUpload />
+            <div className="hover:bg-slate-600 p-2 rounded-full group">
+              <MdOutlineFileUpload className="group-hover:fill-green-500 transition-all" />
+            </div>
+            <div className="hover:bg-slate-600 p-2 rounded-full group">
+              <CiBookmark className="group-hover:fill-orange-500 transition-all" />
             </div>
           </div>
         </div>

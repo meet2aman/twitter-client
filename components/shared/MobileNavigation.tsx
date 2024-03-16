@@ -4,39 +4,48 @@ import CreateTweet from "@/lib/CreateTweet";
 import TwitterXLottie from "@/lib/TwitterXLottie";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useMemo } from "react";
 import { CiBookmark, CiHashtag, CiHome, CiUser } from "react-icons/ci";
 
-const mobileIcon = [
-  {
-    title: "create-tweet",
-    icon: <CreateTweet />,
-    url: "#",
-  },
-  {
-    title: "Explore",
-    icon: <CiHashtag />,
-    url: "/search",
-  },
-  {
-    title: "X",
-    icon: <TwitterXLottie />,
-    url: "/",
-  },
-
-  {
-    title: "Bookmarks",
-    icon: <CiBookmark />,
-    url: "#",
-  },
-  {
-    title: "Profile",
-    icon: <CiUser />,
-    url: "/profile",
-  },
-];
+interface twitterSideButton {
+  title: string;
+  icon: React.ReactNode;
+  url: string;
+}
 const MobileNavigation: React.FC = () => {
   const { user } = useCurrentUser();
+  const mobileIcon: twitterSideButton[] = useMemo(
+    () => [
+      {
+        title: "create-tweet",
+        icon: <CreateTweet />,
+        url: "#",
+      },
+      {
+        title: "Explore",
+        icon: <CiHashtag />,
+        url: "/search",
+      },
+      {
+        title: "X",
+        icon: <TwitterXLottie />,
+        url: "/",
+      },
+
+      {
+        title: "Bookmarks",
+        icon: <CiBookmark />,
+        url: "#",
+      },
+      {
+        title: "Profile",
+        icon: <CiUser />,
+        url: `/${user?.id}`,
+      },
+    ],
+    [user?.id]
+  );
+
   return (
     <>
       <div className="md:hidden fixed bottom-0 w-full">

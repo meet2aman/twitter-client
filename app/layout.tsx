@@ -34,7 +34,7 @@ export default function RootLayout({
                   <MobileNavigation />
                 </main>
               </SmoothScrolling>
-              <ReactQueryDevtools />
+              {/* <ReactQueryDevtools /> */}
             </LoaderProvider>
           </ReactQueryProvider>
         </GoogleOAuthProvider>
